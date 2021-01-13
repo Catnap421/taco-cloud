@@ -8,6 +8,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import lombok.extern.slf4j.Slf4j;
 import tacos.Order;
 
+import javax.validation.Valid;
+import org.springframework.validation.Errors;
+
 @Slf4j
 @Controller
 @RequestMapping("/orders")
@@ -20,7 +23,9 @@ public class OrderController {
     }
 
     @PostMapping
-    public String processOrder(Order order) {
+    public String processOrder(@Valid Order order, Errors errors) {
+        if (errors.hasErrors()) return "orderForm";
+
         log.info("Order submitter: "  + order);
         return "redirect:/";
     }

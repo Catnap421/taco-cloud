@@ -14,6 +14,9 @@ import tacos.Taco;
 import tacos.Ingredient;
 import tacos.Ingredient.Type;
 
+import javax.validation.Valid;
+import org.springframework.validation.Errors;
+
 @Slf4j
 @Controller
 @RequestMapping("/design")
@@ -54,9 +57,10 @@ public class DesignTacocontroller {
     }
 
     @PostMapping
-    public String processDesign(Taco design) {
-        log.info("Processing Design: " + design);
+    public String processDesign(@Valid Taco design, Errors errors) {
+        if (errors.hasErrors()) return "design";
 
+        log.info("Processing Design: " + design);
         return "redirect:/orders/current";
     }
 
