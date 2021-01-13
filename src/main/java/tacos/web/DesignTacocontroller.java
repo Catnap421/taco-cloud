@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import lombok.extern.slf4j.Slf4j;
 import tacos.Taco;
@@ -50,6 +51,13 @@ public class DesignTacocontroller {
                         .stream()
                         .filter(x -> x.getType().equals(type))
                         .collect(Collectors.toList());
+    }
+
+    @PostMapping
+    public String processDesign(Taco design) {
+        log.info("Processing Design: " + design);
+
+        return "redirect:/orders/current";
     }
 
 }
