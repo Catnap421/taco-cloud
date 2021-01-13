@@ -16,6 +16,7 @@
 
     <properties>
         <java.version>11</java.version>
+        <h2.version>1.4.196</h2.version>
     </properties>
 
     <dependencies>
