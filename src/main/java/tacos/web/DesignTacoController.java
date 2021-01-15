@@ -1,5 +1,6 @@
 package tacos.web;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -18,12 +19,14 @@ import tacos.Taco;
 import tacos.Order;
 import tacos.Ingredient;
 import tacos.Ingredient.Type;
+import tacos.User;
 import tacos.data.IngredientRepository;
 
 import javax.validation.Valid;
 import org.springframework.validation.Errors;
 
 import tacos.data.TacoRepository;
+import tacos.data.UserRepository;
 
 
 @Slf4j
@@ -36,14 +39,17 @@ public class DesignTacoController {
 
     private TacoRepository tacoRepo;
 
-    @Autowired // 생성자 주입 - 그런데 왜 인터페이스를 주입하는 거지?
-    public DesignTacoController(IngredientRepository ingredientRepo, TacoRepository tacoRepo) {
+    private UserRepository userRepo;
+
+    @Autowired
+    public DesignTacoController(IngredientRepository ingredientRepo, TacoRepository tacoRepo, UserRepository userRepo) {
         this.ingredientRepo = ingredientRepo;
         this.tacoRepo = tacoRepo;
+        this.userRepo = userRepo;
     }
 
     @GetMapping
-    public String showDesignForm(Model model) {
+    public String showDesignForm(Model model, Principal principal) {
         List<Ingredient> ingredients = new ArrayList<>();
         ingredientRepo.findAll().forEach(i -> ingredients.add(i));
 
@@ -53,7 +59,9 @@ public class DesignTacoController {
                     filterByType(ingredients, type));
         }
 
-        model.addAttribute("taco", new Taco());
+        String username = principal.getName();
+        User user = userRepo.findByUsername(username);
+        model.addAttribute("user", user);
 
         return "design";
     }
