@@ -19,7 +19,10 @@ import javax.sql.DataSource;
 public class securityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests()
+        http.csrf().disable()// h2-console에 접근하기 위해서 disable
+                .headers().frameOptions().disable()
+                .and()
+                .authorizeRequests()
                 .antMatchers("/design", "/orders")
                 .access("hasRole('ROLE_USER')")
                 .antMatchers("/", "/**").access("permitAll")
@@ -28,9 +31,9 @@ public class securityConfig extends WebSecurityConfigurerAdapter {
                 .loginPage("/login")
                 .and()
                 .logout()
-                .logoutSuccessUrl("/")
-                .and()
-                .csrf();
+                .logoutSuccessUrl("/");
+
+
     }
 
     /*

@@ -28,11 +28,17 @@ import org.springframework.validation.Errors;
 import tacos.data.TacoRepository;
 import tacos.data.UserRepository;
 
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+
 
 @Slf4j
 @Controller
 @RequestMapping("/design")
 @SessionAttributes("order")
+@CrossOrigin(origins="*")
 public class DesignTacoController {
 
     private final IngredientRepository ingredientRepo;
@@ -92,6 +98,14 @@ public class DesignTacoController {
         order.addDesign(saved);
 
         return "redirect:/orders/current";
+    }
+
+    @GetMapping("/recent")
+    @ResponseBody
+    public Iterable<Taco> recentTaco() {
+        PageRequest page = PageRequest.of(0, 12, Sort.by("createdAt").descending());
+        log.info("최근 저장된 타코 불러오는 중...");
+        return tacoRepo.findAll(page).getContent();
     }
 
 }
