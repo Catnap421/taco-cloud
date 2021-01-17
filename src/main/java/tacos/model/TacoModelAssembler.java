@@ -7,7 +7,7 @@ import tacos.web.DesignTacoRestController;
 
 public class TacoModelAssembler extends RepresentationModelAssemblerSupport<Taco, TacoModel> {
     public TacoModelAssembler() {
-        super(DesignTacoRestController.class, TacoModel.class);
+        super(Taco.class, TacoModel.class);
     }
 
     @Override
