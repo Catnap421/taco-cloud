@@ -40,8 +40,7 @@ public class RecentController {
         CollectionModel<TacoModel> recentModels = new TacoModelAssembler().toCollectionModel(tacos);
 
         recentModels.add(
-                WebMvcLinkBuilder.linkTo(DesignTacoController.class)
-                        .slash("recent")
+                WebMvcLinkBuilder.linkTo(RecentController.class)
                         .withRel("recents"));
 
         return recentModels;
