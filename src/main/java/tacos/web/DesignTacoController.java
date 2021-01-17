@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
-import org.springframework.hateoas.Link;
+import org.springframework.hateoas.RepresentationModel;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -103,25 +103,27 @@ public class DesignTacoController {
 
     @GetMapping("/recent")
     @ResponseBody
-    public CollectionModel<EntityModel<Taco>> recentTacos() {
+    public CollectionModel<TacoModel> recentTacos() {
         PageRequest page = PageRequest.of(0, 12, Sort.by("createdAt").descending());
         log.info("최근 저장된 타코 불러오는 중...");
 
-        List<Taco> optTacos = tacoRepo.findAll(page).getContent();
+        List<Taco> tacos = tacoRepo.findAll(page).getContent();
 
-        CollectionModel<EntityModel<Taco>> recentResources = CollectionModel.wrap(optTacos);
+        log.info("관련 링크 만들기(하드코딩하지 않기 위해)");
+        CollectionModel<TacoModel> recentModels = new TacoModelAssembler().toCollectionModel(tacos);
 
-        recentResources.add(
+        recentModels.add(
                 WebMvcLinkBuilder.linkTo(DesignTacoController.class)
-                    .slash("recent")
-                    .withRel("recents"));
+                        .slash("recent")
+                        .withRel("recents"));
+
         /*
         recentResoureces.add(
                 linkTo(methodOn(DesignTacoController.class).recentTacos())
                     .withRel("recents"));
          */
 
-        return recentResources;
+        return recentModels;
 
     }
 
