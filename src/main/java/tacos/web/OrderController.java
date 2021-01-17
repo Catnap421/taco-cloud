@@ -1,5 +1,6 @@
 package tacos.web;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -22,6 +23,7 @@ import org.springframework.validation.Errors;
 public class OrderController {
     private OrderRepository orderRepo;
 
+    @Autowired
     public OrderController(OrderRepository orderRepo) {
         this.orderRepo = orderRepo;
     }
