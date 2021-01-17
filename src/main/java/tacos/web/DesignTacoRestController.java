@@ -12,7 +12,7 @@ import java.util.Optional;
 
 @Slf4j
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/rest")
 @CrossOrigin(origins="*")
 public class DesignTacoRestController {
     private TacoRepository tacoRepo;
