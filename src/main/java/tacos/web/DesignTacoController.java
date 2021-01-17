@@ -6,6 +6,10 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.Link;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -99,13 +103,30 @@ public class DesignTacoController {
 
     @GetMapping("/recent")
     @ResponseBody
-    public Iterable<Taco> recentTaco() {
+    public CollectionModel<EntityModel<Taco>> recentTacos() {
         PageRequest page = PageRequest.of(0, 12, Sort.by("createdAt").descending());
         log.info("최근 저장된 타코 불러오는 중...");
-        return tacoRepo.findAll(page).getContent();
+
+        List<Taco> optTacos = tacoRepo.findAll(page).getContent();
+
+        CollectionModel<EntityModel<Taco>> recentResources = CollectionModel.wrap(optTacos);
+
+        recentResources.add(
+                WebMvcLinkBuilder.linkTo(DesignTacoController.class)
+                    .slash("recent")
+                    .withRel("recents"));
+        /*
+        recentResoureces.add(
+                linkTo(methodOn(DesignTacoController.class).recentTacos())
+                    .withRel("recents"));
+         */
+
+        return recentResources;
+
     }
 
     @GetMapping("/{id}")
+    @ResponseBody
     public ResponseEntity<Taco> tacoById(@PathVariable("id") Long id) {
         Optional<Taco> optTaco = tacoRepo.findById(id);
         log.info("path 변수 사용해서 id에 맞는 타코 가져오기");
@@ -117,6 +138,7 @@ public class DesignTacoController {
 
     @PostMapping(consumes = "application/json")
     @ResponseStatus(HttpStatus.CREATED)
+    @ResponseBody
     public Taco postTaco(@RequestBody Taco taco) {
         return tacoRepo.save(taco);
     }

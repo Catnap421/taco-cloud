@@ -59,11 +59,13 @@ public class OrderController {
     }
 
     @PutMapping("/{orderId}")
+    @ResponseBody
     public Order putOrder(@RequestBody Order order) {
         return orderRepo.save(order);
     }
 
     @PatchMapping(path="/{orderId}", consumes="application/json")
+    @ResponseBody
     public Order patchOrder(@PathVariable("orderId") Long orderId, @RequestBody Order patch) {
         Order order = orderRepo.findById(orderId).get();
         if (patch.getDeliveryName() != null) order.setDeliveryName(patch.getDeliveryName());
